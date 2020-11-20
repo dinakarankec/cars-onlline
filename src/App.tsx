@@ -1,10 +1,19 @@
 import React from "react";
 import "./App.css";
 import "normalize.css";
-import { MainContainer, StyledLink } from "./components/styled";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import "./assets/style.css";
+import { MainContainer } from "./components/styled";
+import {
+  BrowserRouter,
+  Redirect,
+  Route,
+  RouteComponentProps,
+  Switch,
+} from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import CarsContainer from "./containers/CarsContainer";
+import NotFound from "./components/NotFound";
 
 function App() {
   return (
@@ -16,19 +25,23 @@ function App() {
             exact
             path="/"
             render={() => {
-              return (
-                <div>
-                  Home <StyledLink to="/detail">Go to Detail Page</StyledLink>
-                </div>
-              );
+              return <Redirect to="/cars" />;
             }}
           />
           <Route
-            path="/detail"
-            render={() => {
-              return <div>Home Page </div>;
+            path="/cars"
+            render={(routeProps: RouteComponentProps) => {
+              return <CarsContainer {...routeProps} />;
             }}
           />
+          <Route
+            exact
+            path="/404"
+            render={(routeProps: RouteComponentProps) => (
+              <NotFound {...routeProps} />
+            )}
+          />
+          <Route render={() => <Redirect to="/404" />} />
         </Switch>
       </MainContainer>
       <Footer />

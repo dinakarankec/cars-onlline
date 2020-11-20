@@ -29,6 +29,30 @@ export const Button = styled.button`
     border: 1px solid ${colors.accent};
     background-color: ${colors.accent};
   }
+
+  &.white {
+    border: 1px solid ${colors.light};
+    background-color: ${colors.white};
+    color: ${colors.dark};
+
+    &:active {
+      border: 1px solid ${colors.light};
+      background-color: ${colors.white};
+    }
+  }
+`;
+
+export const LinkButton = styled.button`
+  display: inline;
+  box-shadow: none;
+  color: ${colors.primary};
+  font-size: 14px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 export const StyledLink = styled(Link)`
@@ -167,6 +191,11 @@ export const Grid: React.FC<GridProps> = ({
 
 export const MainContainer = styled.div`
   min-height: 100%;
-  padding-bottom: -80px;
+  padding-bottom: 80px;
   margin-bottom: -80px;
+`;
+
+export const Main = styled.main`
+  padding: 24px;
+  display: flex;
 `;

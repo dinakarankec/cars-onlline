@@ -14,7 +14,7 @@ const Footer: React.FC<{}> = () => {
   return (
     <FooterUI>
       <Grid className="footer-wrapper" justify="center" alignItems="center">
-        &#169; Auto1 Group {new Date().getFullYear()}
+        &#169; AUTO1 Group {new Date().getFullYear()}
       </Grid>
     </FooterUI>
   );
