@@ -53,6 +53,11 @@ export const LinkButton = styled.button`
   &:hover {
     text-decoration: underline;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    text-decoration: none;
+  }
 `;
 
 export const StyledLink = styled(Link)`

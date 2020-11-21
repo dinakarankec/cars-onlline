@@ -95,20 +95,16 @@ const Dropdown: React.FC<IDropdownProps> = ({
   const handleControlClick = (event: MouseEvent<HTMLButtonElement>) => {
     const documentClickHandler = () => {
       toggle(false);
-      window.removeEventListener("click", documentClickHandler);
+      document.removeEventListener("click", documentClickHandler);
     };
-    event.stopPropagation();
-    toggle((isActive) => !isActive);
-    window.addEventListener("click", documentClickHandler);
-  };
-
-  const handleOptionClick = (
-    event: MouseEvent<HTMLLIElement>,
-    value: Option
-  ) => {
-    event.stopPropagation();
-    onChange(value);
-    toggle(false);
+    toggle(!isOpen);
+    if (!isOpen) {
+      setTimeout(() =>
+        document.addEventListener("click", documentClickHandler)
+      );
+    } else {
+      document.removeEventListener("click", documentClickHandler);
+    }
   };
 
   const selectedOption = useMemo(() => {
@@ -139,8 +135,8 @@ const Dropdown: React.FC<IDropdownProps> = ({
                   option.value === selectedOption.value ? "active item" : "item"
                 }
                 key={option.value}
-                onClick={(event: MouseEvent<HTMLLIElement>) => {
-                  handleOptionClick(event, option);
+                onClick={() => {
+                  onChange(option);
                 }}
               >
                 {option.label}

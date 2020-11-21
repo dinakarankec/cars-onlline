@@ -20,7 +20,7 @@ const Header: React.FC<{}> = () => {
   return (
     <HeaderUI>
       <Grid justify="space-between">
-        <Link to="/">
+        <Link to="/cars">
           <img className="logo" src={logo} alt="Auto1" />
         </Link>
         <Grid alignItems="center">

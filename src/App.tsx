@@ -14,6 +14,10 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CarsContainer from "./containers/CarsContainer";
 import NotFound from "./components/NotFound";
+import CarsProvider from "./contexts/CarsContext";
+import FilterProvider from "./contexts/FilterContext";
+import Favourite from "./components/Favourite";
+import FavouritesProvider from "./contexts/FavouritesContext";
 
 function App() {
   return (
@@ -31,7 +35,15 @@ function App() {
           <Route
             path="/cars"
             render={(routeProps: RouteComponentProps) => {
-              return <CarsContainer {...routeProps} />;
+              return (
+                <CarsProvider>
+                  <FilterProvider>
+                    <FavouritesProvider>
+                      <CarsContainer {...routeProps} />;
+                    </FavouritesProvider>
+                  </FilterProvider>
+                </CarsProvider>
+              );
             }}
           />
           <Route

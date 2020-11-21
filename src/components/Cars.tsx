@@ -1,10 +1,14 @@
-import React from "react";
-import { useRouteMatch } from "react-router-dom";
+import React, { useCallback } from "react";
+import { RouteComponentProps, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import Filter from "./Filter";
 import Pagination from "./Pagination";
 import Skeleton from "./Skeleton";
 import { colors, Grid, Main, StyledLink } from "./styled";
+import useFilter from "./../hooks/useFilter";
+import useCars from "./../hooks/useCars";
+import { fetchCars, Car } from "../modules/cars";
+import Favourite from "./Favourite";
 
 export const CarsWrapper = styled.div`
   width: 100%;
@@ -28,30 +32,64 @@ export const Item = styled.li`
   .car-image {
     width: 100px;
     height: 80px;
-    background-color: ${colors.light};
+    border: 1px solid ${colors.dark};
+    img {
+      width: 100px;
+      height: 80px;
+    }
+    /* background-color: ${colors.light}; */
   }
   .car-info {
     margin-left: 24px;
-
     .info {
       margin-bottom: 8px;
+    }
+    .seperator {
+      margin-left: 8px;
+      margin-right: 8px;
+    }
+    .mileage-unit {
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+
+    .color {
+      text-transform: capitalize;
     }
   }
 `;
 
-const CarListItem: React.FC<any> = () => {
+type CarListItemProps = {
+  car: Car;
+};
+
+const CarListItem: React.FC<CarListItemProps> = ({ car }) => {
   const match = useRouteMatch();
   return (
     <Item>
       <Grid>
-        <div className="car-image" />
+        <div className="car-image">
+          <img src={car.pictureUrl} alt="Car" />
+        </div>
         <div className="car-info">
-          <div className="medium bold info">Chrysler Crossfire</div>
-          <div className="small info">
-            {`Stock # ${623434} - ${152.264}KM - ${"Petrol"} - ${"Yellow"}`}
+          <div className="medium bold info">
+            {car.modelName}
+            <Favourite stockNumber={car.stockNumber.toString()} />
           </div>
+          <Grid className="small info">
+            <>{`Stock # ${car.stockNumber}`}</>
+            <span className="seperator">-</span>
+            <>{`${car.mileage.number}`}</>
+            <span className="mileage-unit">{`${car.mileage.unit}`}</span>
+            <span className="seperator">-</span>
+            <>{`${car.fuelType}`}</>
+            <span className="seperator">-</span>
+            <span className="color">{`${car.color}`}</span>
+          </Grid>
           <div>
-            <StyledLink to={`${match.url}/details/24`}>View Details</StyledLink>
+            <StyledLink to={`${match.url}/details/${car.stockNumber}`}>
+              View Details
+            </StyledLink>
           </div>
         </div>
       </Grid>
@@ -59,25 +97,53 @@ const CarListItem: React.FC<any> = () => {
   );
 };
 
-const CarList: React.FC<any> = () => {
+const CarList: React.FC<RouteComponentProps> = () => {
+  const { filter } = useFilter();
+  const {
+    state: { isFetching, totalCarsCount, page, list, totalPageCount },
+    dispatch,
+  } = useCars();
+
+  const getCars = useCallback(
+    (page: number) => {
+      fetchCars({
+        ...filter,
+        page,
+      })(dispatch);
+    },
+    [filter, dispatch]
+  );
+
+  console.log(list);
+
   return (
     <Main>
       <Filter />
       <CarsWrapper>
-        <div className="title medium bold">Available Cars</div>
-        <div className="results-count medium">Showing 10 of 100 results</div>
-        <Cars>
-          <Skeleton />
-          <CarListItem />
-          <CarListItem />
-          <CarListItem />
-          <CarListItem />
-          <CarListItem />
-          <CarListItem />
-        </Cars>
-        <Grid justify="center">
-          <Pagination />
-        </Grid>
+        {isFetching && <Skeleton />}
+        {!isFetching && totalCarsCount === 0 && (
+          <div className="title medium bold">No Cars Available</div>
+        )}
+        {!isFetching && totalCarsCount > 0 && (
+          <>
+            <div className="title medium bold">Available Cars</div>
+            <div className="results-count medium">
+              Showing 10 of {totalCarsCount} results
+            </div>
+            <Cars>
+              {list.map((car: Car) => (
+                <CarListItem key={car.stockNumber} car={car} />
+              ))}
+            </Cars>
+            <Grid justify="center">
+              <Pagination
+                page={page}
+                totalPages={totalPageCount}
+                onPageChange={getCars}
+              />
+            </Grid>
+          </>
+        )}
       </CarsWrapper>
     </Main>
   );

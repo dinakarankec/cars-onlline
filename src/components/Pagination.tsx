@@ -6,23 +6,52 @@ const ButtonWrapper = styled.div`
   margin: 0px 12px;
 `;
 
-const Pagination: React.FC<any> = () => {
+type PaginationProps = {
+  page: number;
+  totalPages: number;
+  onPageChange(page: number): void;
+};
+
+const Pagination: React.FC<PaginationProps> = ({
+  page,
+  totalPages,
+  onPageChange,
+}) => {
   return (
     <>
       <ButtonWrapper>
-        <LinkButton>First</LinkButton>
+        <LinkButton onClick={() => onPageChange(1)} disabled={page === 1}>
+          First
+        </LinkButton>
       </ButtonWrapper>
       <ButtonWrapper>
-        <LinkButton>Previous</LinkButton>
+        <LinkButton
+          onClick={() => onPageChange(page - 1)}
+          disabled={page === 1}
+        >
+          Previous
+        </LinkButton>
       </ButtonWrapper>
       <ButtonWrapper>
-        <div className="small">Page 2 of 10</div>
+        <div className="small">
+          Page {page} of {totalPages}
+        </div>
       </ButtonWrapper>
       <ButtonWrapper>
-        <LinkButton>Next</LinkButton>
+        <LinkButton
+          onClick={() => onPageChange(page + 1)}
+          disabled={page === totalPages}
+        >
+          Next
+        </LinkButton>
       </ButtonWrapper>
       <ButtonWrapper>
-        <LinkButton>Last</LinkButton>
+        <LinkButton
+          onClick={() => onPageChange(totalPages)}
+          disabled={page === totalPages}
+        >
+          Last
+        </LinkButton>
       </ButtonWrapper>
     </>
   );

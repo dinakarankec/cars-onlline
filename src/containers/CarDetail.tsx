@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
-import { Button, colors, Grid, Main } from "../components/styled";
+import { Button, colors, Grid } from "../components/styled";
+import { API_HOST } from "../Contants";
+import { Car } from "../modules/cars";
+import Favourite from "./../components/Favourite";
+import useFavourites from "./../hooks/useFavourites";
 
 type ParamType = {
   stockNumber: string;
 };
 
-const CoverImage = styled.div`
+const CoverImage = styled(Grid)`
   height: 400px;
   background-color: ${colors.light};
+
+  img {
+    height: 400px;
+  }
 `;
 
 const ContentWrapper = styled.div`
@@ -31,39 +39,99 @@ const ContentWrapper = styled.div`
 
   .info {
     margin-bottom: 24px;
+
+    .mileage-unit {
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+
+    .color {
+      text-transform: capitalize;
+    }
+  }
+
+  .seperator {
+    margin-left: 8px;
+    margin-right: 8px;
+
+    &::after {
+      content: "-";
+    }
   }
 `;
 
 const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
   const { stockNumber } = match.params as ParamType;
+
+  const [car, setCar] = useState<Car | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const { addToFavourites, isFavourite } = useFavourites();
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`${API_HOST}/cars/${stockNumber}`)
+      .then((resp: Response) => resp.json())
+      .then((fetchedCar: { car: Car }) => {
+        setLoading(false);
+        setCar(fetchedCar.car);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setError("Error in loading the car");
+      });
+  }, [stockNumber]);
+
   return (
     <>
-      <CoverImage />
+      {loading && <CoverImage />}
+      {!loading && car && (
+        <CoverImage alignItems="center" justify="center">
+          <img src={car.pictureUrl} alt="car" />
+        </CoverImage>
+      )}
       <ContentWrapper>
-        <Grid>
-          <Grid className="car-info" direction="column">
-            <div className="info large">Chrysler Crossfire</div>
-            <div className="info medium">{`Stock # ${23234} - ${345.453} - ${"Petrol"} - ${"Yellow"}`}</div>
-            <div className="small">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book. It has
-              survived not only five centuries
-            </div>
-          </Grid>
-          <Grid className="add-to-fav" justify="center">
-            <Grid className="fav-popup" direction="column">
-              <div className="small">
-                If you like this car, click the button and save it in your
-                collection of favourite items
+        {!loading && car && (
+          <Grid>
+            <Grid className="car-info" direction="column">
+              <div className="info large">
+                {car.modelName} <Favourite stockNumber={stockNumber} />
               </div>
-              <Grid justify="flex-end" alignItems="flex-end">
-                <Button>Save</Button>
-              </Grid>
+              <div className="info medium">
+                <>{`Stock # ${stockNumber}`}</>
+                <span className="seperator" />
+                <>{car.mileage.number}</>
+                <span className="mileage-unit">{car.mileage.unit}</span>
+                <span className="seperator" />
+                <>{car.fuelType}</>
+                <span className="seperator" />
+                <>{car.color}</>
+              </div>
+              <div className="small">
+                The car is currently available and can be delivered as soon as
+                tomorrow morning. Please be aware that the delivery times shown
+                in this page are not definitive and may change due to bad
+                weather conditions.
+              </div>
+            </Grid>
+            <Grid className="add-to-fav" justify="center">
+              {!isFavourite(stockNumber) && (
+                <Grid className="fav-popup" direction="column">
+                  <div className="small">
+                    If you like this car, click the button and save it in your
+                    collection of favourite items
+                  </div>
+                  <Grid justify="flex-end" alignItems="flex-end">
+                    <Button onClick={() => addToFavourites(stockNumber)}>
+                      Save
+                    </Button>
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
           </Grid>
-        </Grid>
+        )}
       </ContentWrapper>
     </>
   );
