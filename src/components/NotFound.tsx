@@ -19,7 +19,7 @@ const NotFoundWrapper = styled.main`
 
 const NotFound: React.FC<RouteComponentProps> = () => {
   return (
-    <NotFoundWrapper>
+    <NotFoundWrapper data-testid="404-not-found">
       <Grid
         className="not-found-info"
         justify="center"

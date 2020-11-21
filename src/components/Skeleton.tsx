@@ -4,9 +4,8 @@ import { Cars, Item } from "./Cars";
 import { Grid } from "./styled";
 
 const Skeleton: React.FC<{}> = () => {
-  console.log("skeleton", Array().fill(0, 10));
   return (
-    <Cars>
+    <Cars data-testid="skeleton">
       {Array(10)
         .fill(0)
         .map((val, index) => (

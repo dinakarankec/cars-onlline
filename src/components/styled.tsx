@@ -144,32 +144,30 @@ type JustifyContent =
   | "stretch";
 
 interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
-  grow?: boolean;
-  shrink?: boolean;
-  flex?: number | string;
-  wrap?: "wrap" | "nowrap";
   direction?: "row" | "column";
   justify?: JustifyContent;
   alignItems?: AlignItems;
-  basis?: string;
 }
 
 const StyledGrid = styled.div<GridProps>`
   display: flex;
-  ${({ wrap, direction, justify, alignItems }: GridProps) =>
+  ${({ direction, justify, alignItems }: GridProps) =>
     `
-        flex-wrap: ${wrap};
         flex-direction: ${direction};
         justify-content: ${justify || "unset"};
         align-items: ${alignItems || "unset"};
     `}
-  flex-grow: ${({ grow }: GridProps) => (grow ? 1 : "unset")};
-  flex-shrink: ${({ shrink }: GridProps) => (shrink ? 1 : "unset")};
-  flex-basis: ${({ basis }: GridProps) => basis};
-  ${({ flex }: GridProps) =>
-    flex &&
+  ${({ direction }: GridProps) =>
     `
-        flex: ${flex};
+        ${direction ? `flex-direction: ${direction}` : ""};
+    `}
+    ${({ justify }: GridProps) =>
+    `
+        ${justify ? `justify-content: ${justify}` : ""};
+    `}
+    ${({ alignItems }: GridProps) =>
+    `
+        ${alignItems ? `align-items: ${alignItems}` : ""};
     `}
 `;
 
@@ -177,18 +175,10 @@ export const Grid: React.FC<GridProps> = ({
   children,
   className = "",
   direction = "row",
-  wrap,
-  basis,
   ...props
 }) => {
   return (
-    <StyledGrid
-      className={className}
-      direction={direction}
-      basis={basis}
-      wrap={wrap}
-      {...props}
-    >
+    <StyledGrid className={className} direction={direction} {...props}>
       {children}
     </StyledGrid>
   );

@@ -5,13 +5,15 @@ import { colors, LinkButton } from "./styled";
 
 const StyledButton = styled(LinkButton)`
   font-size: inherit;
+  padding: 0px;
+  margin-left: 8px;
   &:hover {
     text-decoration: unset;
+    background-color: ${colors.light};
   }
 `;
 
 const Icon = styled.i`
-  margin-left: 10px;
   color: ${colors.primary};
 `;
 

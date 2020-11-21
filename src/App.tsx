@@ -16,13 +16,12 @@ import CarsContainer from "./containers/CarsContainer";
 import NotFound from "./components/NotFound";
 import CarsProvider from "./contexts/CarsContext";
 import FilterProvider from "./contexts/FilterContext";
-import Favourite from "./components/Favourite";
 import FavouritesProvider from "./contexts/FavouritesContext";
 
 function App() {
   return (
     <BrowserRouter>
-      <MainContainer>
+      <MainContainer data-testid="app">
         <Header />
         <Switch>
           <Route

@@ -13,7 +13,7 @@ import Favourite from "./Favourite";
 export const CarsWrapper = styled.div`
   width: 100%;
   .title {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
   .results-count {
     margin-bottom: 24px;
@@ -44,20 +44,37 @@ export const Item = styled.li`
     .info {
       margin-bottom: 8px;
     }
-    .seperator {
-      margin-left: 8px;
-      margin-right: 8px;
-    }
-    .mileage-unit {
-      text-transform: uppercase;
-      margin-left: 8px;
-    }
-
-    .color {
-      text-transform: capitalize;
-    }
   }
 `;
+
+const CarSpecWrapper = styled(Grid)`
+  .seperator {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+  .mileage-unit {
+    text-transform: uppercase;
+    margin-left: 8px;
+  }
+  .color {
+    text-transform: capitalize;
+  }
+`;
+
+export const CarSpec: React.FC<{ car: Car }> = ({ car }) => {
+  return (
+    <CarSpecWrapper>
+      <>{`Stock # ${car.stockNumber}`}</>
+      <span className="seperator">-</span>
+      <>{`${car.mileage.number}`}</>
+      <span className="mileage-unit">{`${car.mileage.unit}`}</span>
+      <span className="seperator">-</span>
+      <>{`${car.fuelType}`}</>
+      <span className="seperator">-</span>
+      <span className="color">{`${car.color}`}</span>
+    </CarSpecWrapper>
+  );
+};
 
 type CarListItemProps = {
   car: Car;
@@ -77,14 +94,7 @@ const CarListItem: React.FC<CarListItemProps> = ({ car }) => {
             <Favourite stockNumber={car.stockNumber.toString()} />
           </div>
           <Grid className="small info">
-            <>{`Stock # ${car.stockNumber}`}</>
-            <span className="seperator">-</span>
-            <>{`${car.mileage.number}`}</>
-            <span className="mileage-unit">{`${car.mileage.unit}`}</span>
-            <span className="seperator">-</span>
-            <>{`${car.fuelType}`}</>
-            <span className="seperator">-</span>
-            <span className="color">{`${car.color}`}</span>
+            <CarSpec car={car} />
           </Grid>
           <div>
             <StyledLink to={`${match.url}/details/${car.stockNumber}`}>
@@ -114,34 +124,38 @@ const CarList: React.FC<RouteComponentProps> = () => {
     [filter, dispatch]
   );
 
-  console.log(list);
-
   return (
-    <Main>
+    <Main data-testid="cars">
       <Filter />
       <CarsWrapper>
-        {isFetching && <Skeleton />}
-        {!isFetching && totalCarsCount === 0 && (
-          <div className="title medium bold">No Cars Available</div>
-        )}
-        {!isFetching && totalCarsCount > 0 && (
+        {isFetching ? (
+          <Skeleton />
+        ) : (
           <>
-            <div className="title medium bold">Available Cars</div>
-            <div className="results-count medium">
-              Showing 10 of {totalCarsCount} results
-            </div>
-            <Cars>
-              {list.map((car: Car) => (
-                <CarListItem key={car.stockNumber} car={car} />
-              ))}
-            </Cars>
-            <Grid justify="center">
-              <Pagination
-                page={page}
-                totalPages={totalPageCount}
-                onPageChange={getCars}
-              />
-            </Grid>
+            {totalCarsCount === 0 && (
+              <div className="title medium bold">No Cars Available</div>
+            )}
+
+            {totalCarsCount > 0 && (
+              <>
+                <div className="title medium bold">Available Cars</div>
+                <div className="results-count medium">
+                  Showing 10 of {totalCarsCount} results
+                </div>
+                <Cars>
+                  {list.map((car: Car) => (
+                    <CarListItem key={car.stockNumber} car={car} />
+                  ))}
+                </Cars>
+                <Grid justify="center">
+                  <Pagination
+                    page={page}
+                    totalPages={totalPageCount}
+                    onPageChange={getCars}
+                  />
+                </Grid>
+              </>
+            )}
           </>
         )}
       </CarsWrapper>

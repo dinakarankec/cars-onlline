@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
+import { CarSpec } from "../components/Cars";
 import { Button, colors, Grid } from "../components/styled";
 import { API_HOST } from "../Contants";
 import { Car } from "../modules/cars";
@@ -39,24 +40,6 @@ const ContentWrapper = styled.div`
 
   .info {
     margin-bottom: 24px;
-
-    .mileage-unit {
-      text-transform: uppercase;
-      margin-left: 8px;
-    }
-
-    .color {
-      text-transform: capitalize;
-    }
-  }
-
-  .seperator {
-    margin-left: 8px;
-    margin-right: 8px;
-
-    &::after {
-      content: "-";
-    }
   }
 `;
 
@@ -79,7 +62,7 @@ const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
       })
       .catch((err) => {
         setLoading(false);
-        setError("Error in loading the car");
+        setError("Error in loading the car!!");
       });
   }, [stockNumber]);
 
@@ -91,7 +74,7 @@ const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
           <img src={car.pictureUrl} alt="car" />
         </CoverImage>
       )}
-      <ContentWrapper>
+      <ContentWrapper data-testid="car-detail">
         {!loading && car && (
           <Grid>
             <Grid className="car-info" direction="column">
@@ -99,14 +82,7 @@ const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
                 {car.modelName} <Favourite stockNumber={stockNumber} />
               </div>
               <div className="info medium">
-                <>{`Stock # ${stockNumber}`}</>
-                <span className="seperator" />
-                <>{car.mileage.number}</>
-                <span className="mileage-unit">{car.mileage.unit}</span>
-                <span className="seperator" />
-                <>{car.fuelType}</>
-                <span className="seperator" />
-                <>{car.color}</>
+                <CarSpec car={car} />
               </div>
               <div className="small">
                 The car is currently available and can be delivered as soon as
@@ -115,12 +91,13 @@ const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
                 weather conditions.
               </div>
             </Grid>
+
             <Grid className="add-to-fav" justify="center">
               {!isFavourite(stockNumber) && (
                 <Grid className="fav-popup" direction="column">
                   <div className="small">
                     If you like this car, click the button and save it in your
-                    collection of favourite items
+                    collection of favourite items.
                   </div>
                   <Grid justify="flex-end" alignItems="flex-end">
                     <Button onClick={() => addToFavourites(stockNumber)}>
@@ -130,6 +107,11 @@ const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
                 </Grid>
               )}
             </Grid>
+          </Grid>
+        )}
+        {!loading && !car && error && (
+          <Grid justify="center" className="large">
+            {error}
           </Grid>
         )}
       </ContentWrapper>
