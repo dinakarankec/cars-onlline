@@ -119,16 +119,17 @@ const Dropdown: React.FC<IDropdownProps> = ({
   return (
     <Container className={className}>
       <Button
+        data-testid="dropdown"
         onClick={handleControlClick}
         ref={ref}
         className={`white ${className} ${isOpen ? "active" : ""}`}
       >
-        <Control>
+        <Control data-testid="dropdown-control">
           <span>{selectedOption.label}</span>
           <Icon className="icon-arrow-down" />
         </Control>
         {isOpen && (
-          <Options>
+          <Options data-testid="dropdown-options">
             {options.map((option: Option) => (
               <li
                 className={

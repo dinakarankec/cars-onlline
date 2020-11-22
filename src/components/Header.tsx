@@ -18,9 +18,9 @@ const HeaderUI = styled.header`
 
 const Header: React.FC<{}> = () => {
   return (
-    <HeaderUI>
+    <HeaderUI data-testid="header">
       <Grid justify="space-between">
-        <Link to="/cars">
+        <Link to="/cars" data-testid="home-link">
           <img className="logo" src={logo} alt="Auto1" />
         </Link>
         <Grid alignItems="center">

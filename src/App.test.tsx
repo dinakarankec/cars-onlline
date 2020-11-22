@@ -1,9 +1,14 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import App from "./App";
+import { BrowserRouter } from "react-router-dom";
 
 test("Renders the App", () => {
-  render(<App />);
-  const mainElement = screen.getByTestId("app");
+  const { getByTestId } = render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+  const mainElement = getByTestId("app");
   expect(mainElement).toBeInTheDocument();
 });

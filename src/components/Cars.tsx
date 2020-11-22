@@ -63,7 +63,7 @@ const CarSpecWrapper = styled(Grid)`
 
 export const CarSpec: React.FC<{ car: Car }> = ({ car }) => {
   return (
-    <CarSpecWrapper>
+    <CarSpecWrapper data-testid="car-spec">
       <>{`Stock # ${car.stockNumber}`}</>
       <span className="seperator">-</span>
       <>{`${car.mileage.number}`}</>
@@ -80,10 +80,10 @@ type CarListItemProps = {
   car: Car;
 };
 
-const CarListItem: React.FC<CarListItemProps> = ({ car }) => {
+export const CarListItem: React.FC<CarListItemProps> = ({ car }) => {
   const match = useRouteMatch();
   return (
-    <Item>
+    <Item data-testid="car-list-item">
       <Grid>
         <div className="car-image">
           <img src={car.pictureUrl} alt="Car" />

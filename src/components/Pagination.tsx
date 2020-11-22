@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { LinkButton } from "./styled";
+import { Grid, LinkButton } from "./styled";
 
 const ButtonWrapper = styled.div`
   margin: 0px 12px;
@@ -18,7 +18,7 @@ const Pagination: React.FC<PaginationProps> = ({
   onPageChange,
 }) => {
   return (
-    <>
+    <Grid data-testid="pagination">
       <ButtonWrapper>
         <LinkButton onClick={() => onPageChange(1)} disabled={page === 1}>
           First
@@ -53,7 +53,7 @@ const Pagination: React.FC<PaginationProps> = ({
           Last
         </LinkButton>
       </ButtonWrapper>
-    </>
+    </Grid>
   );
 };
 

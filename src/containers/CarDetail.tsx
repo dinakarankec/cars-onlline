@@ -43,6 +43,28 @@ const ContentWrapper = styled.div`
   }
 `;
 
+export const SaveFavourite: React.FC<{
+  stockNumber: string;
+  addToFavourites(stockNumber: string): void;
+}> = ({ addToFavourites, stockNumber }) => {
+  return (
+    <Grid className="fav-popup" direction="column">
+      <div className="small">
+        If you like this car, click the button and save it in your collection of
+        favourite items.
+      </div>
+      <Grid justify="flex-end" alignItems="flex-end">
+        <Button
+          data-testid="save-favourite"
+          onClick={() => addToFavourites(stockNumber)}
+        >
+          Save
+        </Button>
+      </Grid>
+    </Grid>
+  );
+};
+
 const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
   const { stockNumber } = match.params as ParamType;
 
@@ -94,17 +116,10 @@ const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
 
             <Grid className="add-to-fav" justify="center">
               {!isFavourite(stockNumber) && (
-                <Grid className="fav-popup" direction="column">
-                  <div className="small">
-                    If you like this car, click the button and save it in your
-                    collection of favourite items.
-                  </div>
-                  <Grid justify="flex-end" alignItems="flex-end">
-                    <Button onClick={() => addToFavourites(stockNumber)}>
-                      Save
-                    </Button>
-                  </Grid>
-                </Grid>
+                <SaveFavourite
+                  stockNumber={stockNumber}
+                  addToFavourites={addToFavourites}
+                />
               )}
             </Grid>
           </Grid>

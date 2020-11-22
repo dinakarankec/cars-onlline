@@ -12,9 +12,9 @@ const FooterUI = styled.footer`
 
 const Footer: React.FC<{}> = () => {
   return (
-    <FooterUI>
+    <FooterUI data-testid="footer">
       <Grid className="footer-wrapper" justify="center" alignItems="center">
-        &#169; AUTO1 Group {new Date().getFullYear()}
+        &#169; <span>AUTO1 Group {new Date().getFullYear()}</span>
       </Grid>
     </FooterUI>
   );

@@ -4,6 +4,7 @@ import Dropdown from "./Dropdown";
 import { Button, colors, Grid } from "./styled";
 import useMasterData from "./../hooks/useMasterData";
 import useFilter from "../hooks/useFilter";
+import useCars from "../hooks/useCars";
 import { Option } from "../typings";
 
 const FilterWrapper = styled(Grid)`
@@ -51,6 +52,9 @@ const Filter: React.FC<{}> = () => {
   const { options: manufacturers } = useMasterData("manufacturers");
 
   const { filter, setFilter } = useFilter();
+  const {
+    state: { isFetching },
+  } = useCars();
   const [localFilter, setLocalFilter] = useState({
     ...filter,
   });
@@ -87,7 +91,9 @@ const Filter: React.FC<{}> = () => {
         />
       </FieldGroup>
       <Actions justify="flex-end">
-        <Button onClick={() => setFilter(localFilter)}>Filter</Button>
+        <Button disabled={isFetching} onClick={() => setFilter(localFilter)}>
+          {isFetching ? "Filtering..." : "Filter"}
+        </Button>
       </Actions>
     </FilterWrapper>
   );
