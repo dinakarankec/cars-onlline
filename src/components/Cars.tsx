@@ -140,7 +140,7 @@ const CarList: React.FC<RouteComponentProps> = () => {
               <>
                 <div className="title medium bold">Available Cars</div>
                 <div className="results-count medium">
-                  Showing 10 of {totalCarsCount} results
+                  Showing {list.length} of {totalCarsCount} results
                 </div>
                 <Cars>
                   {list.map((car: Car) => (
